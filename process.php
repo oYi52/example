@@ -10,10 +10,48 @@ echo $_POST['wostatus'];
 echo $_POST['wofile'];
 */
 $_con = mysqli_connect("localhost","example","kYcM1XuFebgqftpm","example");
-echo $sql ="INSERT INTO `ex_works` (`woid`, `wocategory`, `wotitle`, `woyear`, `womaterial`, `wosize`, `wostatus`, `woext`) VALUES (NULL, '".$_POST['wocategory']."', '".$_POST['wotitle']."', '".$_POST['woyear']."', '".$_POST['womaterial']."', '".$_POST['wosize']."', '".$_POST['wostatus']."', '".$_POST['wofile']."');";
-$query = mysqli_query($_con, $sql);
-header("Location: index.php?result=success");
-exit;
+
+if(isset($_POST['action'])&&$_POST['action']=="新增作品"){
+    if(isset($_FILES['wofile'])){
+        //定義上傳路徑
+        $upload_dir="uploadfiles/".$_POST['wocategory']."/";
+        if(!is_dir($upload_dir)){
+            if(!mkdir($upload_dir)){
+                header("Location: index.php?result=mkdirfailed");
+                exit;
+            }
+        }
+        
+        $allow_ext=array("jpg","png","pdf","tif");
+        echo $filename=$_FILES['wofile']['name'];
+        echo $ext=strtolower(pathinfo($_FILES['wofile']['name'], PATHINFO_EXTENSION));
+
+        if(in_array($ext,$allow_ext)){
+            echo $sql ="INSERT INTO `ex_works` (`woid`, `wocategory`, `wotitle`, `woyear`, `womaterial`, `wosize`, `wostatus`, `woext`) VALUES (NULL, '".$_POST['wocategory']."', '".$_POST['wotitle']."', '".$_POST['woyear']."', '".$_POST['womaterial']."', '".$_POST['wosize']."', '".$_POST['wostatus']."', '".$ext."');";
+            $query = mysqli_query($_con, $sql);
+            if($query){
+                $new_file_name=$upload_dir.mysqli_insert_id($_con).".".$ext;
+                if(move_uploaded_file($_FILES['wofile']['tmp_name'],$new_file_name)){
+                    header("Location: index.php?result=success");
+                    exit;
+                }else{
+                    header("Location: index.php?result=unabletoupload");
+                    exit;
+                }
+            }else{
+                header("Location: index.php?result=failed");
+                exit;
+            }
+        }else{
+            header("Location: index.php?result=invailedext");
+            exit;
+
+        }
+    }else{
+        header("Location: index.php?result=nofile");
+        exit;
+    }
+}
 
 /*
     //判斷輸入值是否為數字

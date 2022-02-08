@@ -19,6 +19,8 @@ $query = mysqli_query($_con, $sql);
 
 <div class="container">
     <?php if(isset($_GET['result'])&&$_GET['result']=="success"){echo "<h3>新增成功!</h3>";} ?>
+    <?php if(isset($_GET['result'])&&$_GET['result']=="failed"){echo "<h3>新增失敗!</h3>";} ?>
+    <?php if(isset($_GET['result'])&&$_GET['result']=="nofile"){echo "<h3>未選擇檔案!</h3>";} ?>
     <div class="card mt-3 p-3">
         <h2>作品列表</h2>
         <table class="table table-striped">
@@ -36,7 +38,7 @@ $query = mysqli_query($_con, $sql);
                 <?php while($row=mysqli_fetch_assoc($query)){ ?>
                 <tr>
                     <td><?php echo $row['wocategory']; ?></td>
-                    <td><?php echo $row['wotitle']; ?></td>
+                    <td><a href="index.php?id=<?php echo $row['woid']; ?>"><?php echo $row['wotitle']; ?></a></td>
                     <td><?php echo $row['woyear']; ?></td>
                     <td><?php echo $row['womaterial']; ?></td>
                     <td><?php echo $row['wosize']; ?></td>
@@ -49,7 +51,7 @@ $query = mysqli_query($_con, $sql);
     <div class="card mt-3 p-3">
         <h2>新增作品</h2>
         <hr>
-        <form action="process.php" method="POST">
+        <form action="process.php" method="POST" enctype="multipart/form-data">
             <label for="">作品分類</label>
             <select name="wocategory" id="wocategory" class="form-control">
                 <option value="分類一">分類一</option>
@@ -57,23 +59,56 @@ $query = mysqli_query($_con, $sql);
                 <option value="分類三">分類三</option>
             </select>
             <label>作品名稱</label>
-            <input type="text" name="wotitle" id="wotitle" class="form-control">
+            <input type="text" name="wotitle" id="wotitle" class="form-control" required>
             <label>年份</label>
-            <input type="text" name="woyear" id="woyear" class="form-control">
+            <input type="text" name="woyear" id="woyear" class="form-control"  required>
             <label>材質</label>
-            <input type="text" name="womaterial" id="womaterial" class="form-control">
+            <input type="text" name="womaterial" id="womaterial" class="form-control"  required>
             <label>尺寸</label>
-            <input type="text" name="wosize" id="wosize" class="form-control">
+            <input type="text" name="wosize" id="wosize" class="form-control"  required>
             <label>收藏狀態</label>
-            <input type="text" name="wostatus" id="wostatus" class="form-control">
+            <input type="text" name="wostatus" id="wostatus" class="form-control"  required>
             <label>作品圖片</label>
-            <input type="file" name="wofile" id="wofile" class="form-control">
+            <input type="file" name="wofile" id="wofile" class="form-control"  required>
             <hr>
-            <input type="submit" class="form-control btn-success" value="新增作品">
+            <input type="submit" name="action" class="form-control btn-success" value="新增作品"  required>
         </form>
     </div>
+    <?php if(isset($_GET['id'])){ 
+        
+        $sql ="SELECT * FROM `ex_works` WHERE `woid` = '".$_GET['id']."'";
+        $query = mysqli_query($_con, $sql);
+        $row = mysqli_fetch_assoc($query);
+        
+        ?>
+    <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewModalLabel"><?php echo $row['wotitle']; ?></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="uploadfiles/<?php echo $row['wocategory']."/".$row['woid'].".".$row['woext']; ?>" class="img-fluid" alt="">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                <a href="uploadfiles/<?php echo $row['wocategory']."/".$row['woid'].".".$row['woext']; ?>" class="btn btn-primary" download="<?php echo $row['wotitle'].".".$row['woext']; ?>">下載</a>
+            </div>
+            </div>
+        </div>
+    </div>
+    <?php } ?>
 </div>
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+<script>
+    var myModal = new bootstrap.Modal(document.getElementById('viewModal'), {
+        keyboard: false
+    });
+    <?php if(isset($_GET['id'])){ ?>
+    myModal.show();
+    <?php } ?>
+</script>
 </html>
