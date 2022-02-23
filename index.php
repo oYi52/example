@@ -4,6 +4,8 @@ $_con = mysqli_connect("localhost","example","kYcM1XuFebgqftpm","example");
 $sql ="SELECT * FROM `ex_works`";
 $query = mysqli_query($_con, $sql);
 
+$content = array();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,40 +34,87 @@ $query = mysqli_query($_con, $sql);
             </button>
             </div>
         </div>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>作品分類</th>
-                    <th>作品名稱</th>
-                    <th>年份</th>
-                    <th>材質</th>
-                    <th>尺寸</th>
-                    <th>收藏狀態</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while($row=mysqli_fetch_assoc($query)){ ?>
-                <tr>
-                    <td><?php echo $row['wocategory']; ?></td>
-                    <td><a href="index.php?id=<?php echo $row['woid']; ?>"><?php echo $row['wotitle']; ?></a></td>
-                    <td><?php echo $row['woyear']; ?></td>
-                    <td><?php echo $row['womaterial']; ?></td>
-                    <td><?php echo $row['wosize']; ?></td>
-                    <td><?php echo $row['wostatus']; ?></td>
-                    <td>
-                        <a href="index.php?edit=<?php echo $row['woid']; ?>" class="btn btn-sm btn-success">編輯</a>
-                        <form action="process.php" method="POST">
-                            <input type="hidden" name="woid" value="<?php echo $row['woid']; ?>">
-                            <input type="submit" name="action" class="btn btn-sm btn-danger" value="刪除" onclick="return confirm('確認要刪除嗎？')">
-                        </form>
-                    </td>
-                </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+
+        <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-immage-tab" data-bs-toggle="tab" data-bs-target="#nav-immage" type="button" role="tab" aria-controls="nav-immage" aria-selected="true">圖像顯示</button>
+            <button class="nav-link" id="nav-list-tab" data-bs-toggle="tab" data-bs-target="#nav-list" type="button" role="tab" aria-controls="nav-list" aria-selected="false">列表顯示</button>
+            <button class="nav-link" id="nav-category-tab" data-bs-toggle="tab" data-bs-target="#nav-category" type="button" role="tab" aria-controls="nav-category" aria-selected="false">編輯分類</button>
+        </div>
+        </nav>
+        <div class="tab-content mt-3" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-immage" role="tabpanel" aria-labelledby="nav-immage-tab">
+                <div class="row">
+                    <?php while($row=mysqli_fetch_assoc($query)){
+                            $content[]=$row;
+                            //array_push($content,$row);
+                        ?>
+                        <div class="col-3">
+                        <div class="card">
+                            <img src="uploadfiles/<?php echo $row['wocategory']."/".$row['woid'].".".$row['woext']; ?>" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title"><?php echo $row['wotitle']; ?></h5>
+                                <ul>
+                                    <li><?php echo $row['woyear']; ?></li>
+                                    <li><?php echo $row['womaterial']; ?></li>
+                                    <li><?php echo $row['wosize']; ?></li>
+                                    <li><?php echo $row['wostatus']; ?></li>
+                                </ul>
+                            </div>
+                        </div>
+                        </div>
+                    <?php }  ?>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>作品分類</th>
+                            <th>作品名稱</th>
+                            <th>年份</th>
+                            <th>材質</th>
+                            <th>尺寸</th>
+                            <th>收藏狀態</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($content as $key => $value){ ?>
+                        <tr>
+                            <td><?php echo $value['wocategory']; ?></td>
+                            <td><a href="index.php?id=<?php echo $value['woid']; ?>"><?php echo $value['wotitle']; ?></a></td>
+                            <td><?php echo $value['woyear']; ?></td>
+                            <td><?php echo $value['womaterial']; ?></td>
+                            <td><?php echo $value['wosize']; ?></td>
+                            <td><?php echo $value['wostatus']; ?></td>
+                            <td>
+                                <a href="index.php?edit=<?php echo $value['woid']; ?>" class="btn btn-sm btn-success">編輯</a>
+                                <form action="process.php" method="POST">
+                                    <input type="hidden" name="woid" value="<?php echo $value['woid']; ?>">
+                                    <input type="submit" name="action" class="btn btn-sm btn-danger" value="刪除" onclick="return confirm('確認要刪除嗎？')">
+                                </form>
+                            </td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-pane fade" id="nav-category" role="tabpanel" aria-labelledby="nav-category-tab">
+                <h1>20220222:回家作業在這裡</h1>
+            </div>
+        </div>
+
+        
+        
     </div>
-    <?php if(isset($_GET['add'])){ ?>
+    <?php 
+    
+    //新增作品的表單視窗在這裡
+    if(isset($_GET['add'])){ 
+    
+    ?>
     <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -83,13 +132,16 @@ $query = mysqli_query($_con, $sql);
         </div>
     </div>
     <?php } ?>
-    <?php if(isset($_GET['id'])){ 
+    <?php
+    
+    //檢視作品的視窗在這裡
+    if(isset($_GET['id'])){ 
         
         $sql ="SELECT * FROM `ex_works` WHERE `woid` = '".$_GET['id']."'";
         $query = mysqli_query($_con, $sql);
         $row = mysqli_fetch_assoc($query);
         
-        ?>
+    ?>
     <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -142,7 +194,11 @@ $query = mysqli_query($_con, $sql);
             </div>
         </div>
     </div>
-    <?php if(isset($_GET['edit'])){ 
+    <?php 
+    
+    //編輯作品的表單視窗在這裡
+
+    if(isset($_GET['edit'])){ 
         
         $sql ="SELECT * FROM `ex_works` WHERE `woid` = '".$_GET['edit']."'";
         $query = mysqli_query($_con, $sql);
@@ -178,6 +234,7 @@ $query = mysqli_query($_con, $sql);
                             <label>作品圖片</label>
                             <img src="uploadfiles/<?php echo $row['wocategory']."/".$row['woid'].".".$row['woext'] ?>" class="img-fluid img-thumbnail">
                             <input type="file" name="wofile" id="wofile" class="form-control">
+                            <input type="hidden" name="woext" value="<?php echo $row['woext']; ?>">
                             <input type="hidden" name="woid" value="<?php echo $row['woid']; ?>">
                     </div>
                     <div class="modal-footer">

@@ -2,6 +2,7 @@
 
 $_con = mysqli_connect("localhost","example","kYcM1XuFebgqftpm","example");
 
+
 if(isset($_POST['action'])&&$_POST['action']=="新增作品"){
     if(isset($_FILES['wofile'])){
         //定義上傳路徑
@@ -70,7 +71,15 @@ if(isset($_POST['action'])&&$_POST['action']=="編輯作品"){
 
     //判斷是否有改類別
     /* 這次的回家作業寫在這裡 */
+    if($_POST['wocategory']!=$_POST['wocatorigin']){
+        $origin_dir="uploadfiles/".$_POST['wocatorigin']."/";
+        $new_dir="uploadfiles/".$_POST['wocategory']."/";
+        $file_name = $_POST['woid'].".".$_POST['woext'];
 
+        rename($origin_dir.$file_name,$new_dir.$file_name);
+
+    }
+    
     //再判斷是不是有重新上傳檔案
     if(isset($_FILES['wofile'])){
         //定義路徑
