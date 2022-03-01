@@ -16,8 +16,8 @@
 
 ### 2 資料庫規格
 
-* 2-1 [資料庫樣板與權限](documentation/2-1.md)
-* 2-2 [資料表欄位](documentation/2-2.md)
+* 2-1 [資料庫樣板與權限](documentation/2.md#2-1-資料庫樣板與權限)
+* 2-2 [資料表欄位](documentation/2.md#2-2-資料表欄位)
 
 ### 3 功能架構
 
