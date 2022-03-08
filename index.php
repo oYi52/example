@@ -131,6 +131,8 @@ while($row=mysqli_fetch_assoc($query)){
                             <th>順序</th>
                             <th>分類名稱</th>
                             <th>分類說明</th>
+                            <th>操作</th>
+                            <td>刪除</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -139,10 +141,49 @@ while($row=mysqli_fetch_assoc($query)){
                                 <td><?php echo $value['wcorder']; ?></td>
                                 <td><?php echo $value['wcname']; ?></td>
                                 <td><?php echo $value['wcbrief']; ?></td>
+                                <td>
+                                    ↑向上｜↓向下
+                                </td>
+                                <td><a class="btn btn-sm btn-success" href="index.php?tab=category&editcat=<?php echo $key; ?>">編輯</a><form action="process.php" method="POST"><input type="hidden" name="wcid" value="<?php echo $key; ?>"><input type="submit" class="btn btn-sm btn-danger" name="action" value="刪除分類" onclick="return confirm('確定要刪除嗎？')"></form></td>
                             </tr>
                         <?php } ?>
                     </tbody>
                 </table>
+                <!--新增分類區塊-->
+                <?php if(!isset($_GET['editcat'])){ ?>
+                <div class="card">
+                    <div class="card-body">
+                        <form action="process.php" method="POST">
+                            <h5>新增分類</h5>
+                            <label for="wcname">分類名稱</label>
+                            <input type="text" class="form-control" name="wcname" id="wcname" placeholder="請輸入分類">
+                            <input type="hidden" name="wcorder" value="<?php echo count($category)+1; ?>">
+                            <label for="wcbrief">分類介紹</label>
+                            <textarea name="wcbrief" id="wcbrief" cols="30" rows="10" class="form-control"></textarea>
+                            <hr>
+                            <input type="submit" class="btn btn-success form-control" name="action" value="新增分類">
+                        </form>
+                    </div>
+                </div>
+                <?php }else{ ?>
+                <!--./新增分類區塊-->
+                <!--編輯分類區塊-->
+                <div class="card">
+                    <div class="card-body">
+                        <form action="process.php" method="POST">
+                            <h5>編輯「<?php echo $category[$_GET['editcat']]['wcname']; ?>」分類</h5>
+                            <label for="wcname">分類名稱</label>
+                            <input type="hidden" name="wcid" value="<?php echo $_GET['editcat']; ?>">
+                            <input type="text" class="form-control" name="wcname" id="wcname" placeholder="請輸入分類" value="<?php echo $category[$_GET['editcat']]['wcname']; ?>">
+                            <label for="wcbrief">分類介紹</label>
+                            <textarea name="wcbrief" id="wcbrief" cols="30" rows="10" class="form-control"><?php echo $category[$_GET['editcat']]['wcbrief']; ?></textarea>
+                            <hr>
+                            <input type="submit" class="btn btn-success form-control" name="action" value="編輯分類">
+                        </form>
+                    </div>
+                </div>
+                <?php } ?>
+                <!--./編輯分類區塊-->
             </div>
             <!--./分類列表區塊-->
         </div>
@@ -278,5 +319,22 @@ while($row=mysqli_fetch_assoc($query)){
     });
     editModal.show();
     <?php } ?>
+    <?php
+    if(isset($_GET['tab'])){ 
+        switch($_GET['tab']){
+            case "image": ?>
+            var tab = new bootstrap.Tab("#nav-image-tab");
+        <?php break;
+            case "list": ?>
+            var tab = new bootstrap.Tab("#nav-list-tab");
+        <?php break;
+            case "category": ?>
+            var tab = new bootstrap.Tab("#nav-category-tab");
+        <?php break;
+        }?>
+    tab.show();
+    <?php 
+    };
+    ?>
 </script>
 </html>

@@ -36,19 +36,19 @@ if(isset($_POST['action'])&&$_POST['action']=="新增作品"){
                     header("Location: index.php?result=success");
                     exit;
                 }else{
-                    header("Location: index.php?result=unabletoupload");
+                    header("Location: index.php?tab=list&result=unabletoupload");
                     exit;
                 }
             }else{
-                header("Location: index.php?result=failed");
+                header("Location: index.php?tab=list&result=failed");
                 exit;
             }
         }else{
-            header("Location: index.php?result=invailedext");
+            header("Location: index.php?tab=list&result=invailedext");
             exit;
         }
     }else{
-        header("Location: index.php?result=nofile");
+        header("Location: index.php?tab=list&result=nofile");
         exit;
     }
 }
@@ -58,7 +58,7 @@ if(isset($_POST['action'])&&$_POST['action']=="新增作品"){
 if(isset($_POST['action'])&&$_POST['action']=="刪除"){
     echo $sql ="DELETE FROM `ex_works` WHERE `woid` = '".$_POST['woid']."'";
     $query = mysqli_query($_con, $sql);
-    header("Location: index.php?result=deleted");
+    header("Location: index.php?tab=list&result=deleted");
     exit;
 }
 /* .作品刪除 work_delete */
@@ -102,23 +102,48 @@ if(isset($_POST['action'])&&$_POST['action']=="編輯作品"){
             if(move_uploaded_file($_FILES['wofile']['tmp_name'],$new_file_name)){
                 $sql = "UPDATE `ex_works` SET `woext` = '".$ext."' WHERE `woid` = ".$_POST['woid'];
                 $query = mysqli_query($_con, $sql);
-                header("Location: index.php?result=success");
+                header("Location: index.php?tab=list&result=success");
                 exit;
             }else{
-                header("Location: index.php?result=unabletoupload");
+                header("Location: index.php?tab=list&result=unabletoupload");
                 exit;
             }
         }else{
-            header("Location: index.php?result=invailedext");
+            header("Location: index.php?tab=list&result=invailedext");
             exit;
         }
     }else{
-        header("Location: index.php?result=editsucandnofile");
+        header("Location: index.php?tab=list&result=editsucandnofile");
         exit;
     }
 }
 /* .作品編輯 work_edit */
 
+/* 新增分類 category_create */
+if(isset($_POST['action'])&&$_POST['action']=="新增分類"){
+    echo $sql = "INSERT INTO `ex_category` (`wcid`, `wcname`, `wcorder`, `wcbrief`) VALUES (NULL, '".$_POST['wcname']."', '".$_POST['wcorder']."', '".$_POST['wcbrief']."');";
+    $query = mysqli_query($_con, $sql);
+    header("Location: index.php?tab=category&result=catcreated");
+    exit;
+}
+/* .新增分類 category_create */
 
+/* 編輯分類 category_edit */
+if(isset($_POST['action'])&&$_POST['action']=="編輯分類"){
+    echo $sql = "UPDATE `ex_category` SET `wcname` = '".$_POST['wcname']."', `wcbrief` = '".$_POST['wcbrief']."' WHERE `wcid` = ".$_POST['wcid'];
+    $query = mysqli_query($_con, $sql);
+    header("Location: index.php?tab=category&result=catedited");
+    exit;
+}
+/* .編輯分類 category_edit */
+
+/* 分類刪除 category_delete */
+if(isset($_POST['action'])&&$_POST['action']=="刪除分類"){
+    echo $sql ="DELETE FROM `ex_category` WHERE `wcid` = '".$_POST['wcid']."'";
+    $query = mysqli_query($_con, $sql);
+    header("Location: index.php?tab=category&result=catdeleted");
+    exit;
+}
+/* .分類刪除 category_delete */
 
 ?>
