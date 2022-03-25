@@ -149,7 +149,31 @@ if(isset($_POST['action'])&&$_POST['action']=="刪除分類"){
 
 /* 分類向上 */
 if(isset($_GET['case_up'])){
+    //先找出要交換的另一個順序
+    $r=$_GET['case_up']-1;
+    //把兩個要互換的順序的ID査出來
+    $sql="SELECT `wcorder`, `wcid` FROM `ex_category` WHERE `wcorder` IN (".$_GET['case_up'].",".$r.")";
+    //檢查一下叫出來的資料是不是正確的
+    $result=mysqli_query($_con,$sql);
+    //宣告一個空陣列看資料（其實可以省略）
+    $a=array();
+    //逐條讀取查詢出來的資料
+    while($row = mysqli_fetch_assoc($result)){
+        //將查詢到的資料存進名為$a的陣列中的一個新的值
+        $a[]=$row;
+    }
+    //將$a的陣列以JSON格式呈現
+    echo json_encode($a);
+    /*
+    如果是在順序2的膠彩點「向上」則會出現以下結果：
+        [{"wcorder":"1","wcid":"1"},{"wcorder":"2","wcid":"2"}]
+    可以檢查看看有沒有出現這樣的結果，有出現的話就是正確的。
 
+    接下來要怎麼做呢？
+    - 試試看交換調出來的兩筆資料的順序（wcorder）
+    - 試試看怎麼判斷這個請求有沒有合法（例如，如果他排在第一個，沒有上面的值，就不是合法的）
+        （提示：mysqli_num_rows($query)）
+    */
 }
 /* .分類向上 */
 
