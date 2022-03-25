@@ -1,6 +1,7 @@
 <?php 
 
 $_con = mysqli_connect("localhost","example","kYcM1XuFebgqftpm","example");
+$_con->query("SET NAMES utf8");
 
 //載入分類清單
 $sql ="SELECT * FROM `ex_category`";
@@ -142,7 +143,7 @@ while($row=mysqli_fetch_assoc($query)){
                                 <td><?php echo $value['wcname']; ?></td>
                                 <td><?php echo $value['wcbrief']; ?></td>
                                 <td>
-                                    ↑向上｜↓向下
+                                    <a href="process.php?case_up=<?php echo $value['wcorder']; ?>">↑向上</a>｜<a href="process.php?case_down=<?php echo $value['wcorder']; ?>">↓向下</a>
                                 </td>
                                 <td><a class="btn btn-sm btn-success" href="index.php?tab=category&editcat=<?php echo $key; ?>">編輯</a><form action="process.php" method="POST"><input type="hidden" name="wcid" value="<?php echo $key; ?>"><input type="submit" class="btn btn-sm btn-danger" name="action" value="刪除分類" onclick="return confirm('確定要刪除嗎？')"></form></td>
                             </tr>

@@ -2,6 +2,7 @@
 
 /* 指定資料庫連線 sql_init */
 $_con = mysqli_connect("localhost","example","kYcM1XuFebgqftpm","example");
+$_con->query("SET NAMES utf8");
 /* .指定資料庫連線 sql_init */
 
 /* 作品編輯 work_create */
@@ -146,4 +147,15 @@ if(isset($_POST['action'])&&$_POST['action']=="刪除分類"){
 }
 /* .分類刪除 category_delete */
 
+/* 分類向上 */
+if(isset($_GET['case_up'])){
+
+}
+/* .分類向上 */
+
+/* 分類向下 */
+if(isset($_GET['case_down'])){
+
+}
+/* .分類向下 */
 ?>
