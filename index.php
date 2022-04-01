@@ -4,7 +4,7 @@ $_con = mysqli_connect("localhost","example","kYcM1XuFebgqftpm","example");
 $_con->query("SET NAMES utf8");
 
 //載入分類清單
-$sql ="SELECT * FROM `ex_category`";
+$sql ="SELECT * FROM `ex_category` ORDER BY `wcorder`";
 $query = mysqli_query($_con, $sql);
 $category = array();
 while($row=mysqli_fetch_assoc($query)){ 
@@ -137,13 +137,15 @@ while($row=mysqli_fetch_assoc($query)){
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($category as $key => $value){ ?>
+                        <?php $count=0;
+                        foreach($category as $key => $value){ 
+                            $count+=1; ?>
                             <tr>
                                 <td><?php echo $value['wcorder']; ?></td>
                                 <td><?php echo $value['wcname']; ?></td>
-                                <td><?php echo $value['wcbrief']; ?></td>
+                                <td><?php echo $value['wcbrief'];?></td>
                                 <td>
-                                    <a href="process.php?case_up=<?php echo $value['wcorder']; ?>">↑向上</a>｜<a href="process.php?case_down=<?php echo $value['wcorder']; ?>">↓向下</a>
+                                    <?php if($count!=1){ ?><a href="process.php?case_up=<?php echo $value['wcorder']; ?>">↑向上</a><?php }else{echo "↑向上";} ?>｜<?php if(!($count==count($category))){ ?><a href="process.php?case_down=<?php echo $value['wcorder']; ?>">↓向下</a><?php }else{echo "↓向下";} ?>
                                 </td>
                                 <td><a class="btn btn-sm btn-success" href="index.php?tab=category&editcat=<?php echo $key; ?>">編輯</a><form action="process.php" method="POST"><input type="hidden" name="wcid" value="<?php echo $key; ?>"><input type="submit" class="btn btn-sm btn-danger" name="action" value="刪除分類" onclick="return confirm('確定要刪除嗎？')"></form></td>
                             </tr>
@@ -194,23 +196,19 @@ while($row=mysqli_fetch_assoc($query)){
     <!--檢視作品Modal-->
     <?php
     //檢查GET變數是否為檢視模式(判斷方式：是否有在id變數中指定作品ID)
-    if(isset($_GET['id'])){ 
-        $sql ="SELECT * FROM `ex_works` WHERE `woid` = '".$_GET['id']."'";
-        $query = mysqli_query($_con, $sql);
-        $row = mysqli_fetch_assoc($query);   
-    ?>
+    if(isset($_GET['id'])){ ?>
     <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewModalLabel"><?php echo $row['wotitle']; ?></h5>
+                <h5 class="modal-title" id="viewModalLabel"><?php echo $content[$_GET['id']]['wotitle']; ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <img src="uploadfiles/<?php echo $row['wocategory']."/".$row['woid'].".".$row['woext']; ?>" class="img-fluid" alt="">
+                <img src="uploadfiles/<?php echo $content[$_GET['id']]['wocategory']."/".$content[$_GET['id']]['woid'].".".$content[$_GET['id']]['woext']; ?>" class="img-fluid" alt="">
             </div>
             <div class="modal-footer">
-                <a href="uploadfiles/<?php echo $row['wocategory']."/".$row['woid'].".".$row['woext']; ?>" class="btn btn-primary" download="<?php echo $row['wotitle'].".".$row['woext']; ?>">下載</a>
+                <a href="uploadfiles/<?php echo $content[$_GET['id']]['wocategory']."/".$content[$_GET['id']]['woid'].".".$content[$_GET['id']]['woext']; ?>" class="btn btn-primary" download="<?php echo $content[$_GET['id']]['wotitle'].".".$content[$_GET['id']]['woext']; ?>">下載</a>
             </div>
             </div>
         </div>
@@ -274,7 +272,7 @@ while($row=mysqli_fetch_assoc($query)){
                             <label for="">作品分類</label>
                             <select name="wocategory" id="wocategory" class="form-control">
                                 <?php foreach ($category as $key => $value){ ?>
-                                    <option value="<?php echo $value['wcid']; ?>" <?php if($row['wocategory']==$value['wocategory']){echo "selected";} ?>><?php echo $value['wcname']; ?></option>
+                                    <option value="<?php echo $value['wcid']; ?>" <?php if($row['wocategory']==$value['wcid']){echo "selected";} ?>><?php echo $value['wcname']; ?></option>
                                 <?php } ?>
                             </select>
                             <input type="hidden" name="wocatorigin" value="<?php echo $row['wocategory']; ?>">
@@ -295,7 +293,7 @@ while($row=mysqli_fetch_assoc($query)){
                             <input type="hidden" name="woid" value="<?php echo $row['woid']; ?>">
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" name="action" class="form-control btn-success" value="編輯作品"  required>
+                        <input type="submit" name="action" class="form-control btn-success" value="編輯作品" required>
                     </div>
                 </form>
             </div>
