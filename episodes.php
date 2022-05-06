@@ -6,6 +6,21 @@ $_con->query("SET NAMES utf8");
 //載入分類清單
 $sql ="SELECT * FROM `ex_episodes`";
 $query = mysqli_query($_con, $sql);
+
+//定義一頁幾筆資料
+$itemsperpage=10;
+$epcount = mysqli_num_rows($query);
+
+//判斷筆數是否可以被整除
+if($epcount%$itemsperpage>0){
+    $pages = intval($epcount/$itemsperpage)+1;
+}else{
+    $pages = intval($epcount/$itemsperpage);
+}
+
+echo "共{$epcount}筆資料，每頁顯示{$itemsperpage}筆資料，共{$pages}頁。";
+die();
+
 $episodes = array();
 while($row=mysqli_fetch_assoc($query)){ 
     $episodes[$row['epid']]=$row;
