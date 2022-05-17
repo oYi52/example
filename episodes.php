@@ -3,13 +3,25 @@
 $_con = mysqli_connect("localhost","example","kYcM1XuFebgqftpm","example");
 $_con->query("SET NAMES utf8");
 
-//載入分類清單
-$sql ="SELECT * FROM `ex_episodes`";
-$query = mysqli_query($_con, $sql);
+if(!isset($_GET['p'])){
+    $curpage=1;
+}else{
+    $curpage=$_GET['p'];
+}
 
 //定義一頁幾筆資料
 $itemsperpage=10;
-$epcount = mysqli_num_rows($query);
+
+$offset=($curpage-1)*$itemsperpage;
+
+//載入分類清單
+$sql ="SELECT * FROM `ex_episodes` LIMIT {$itemsperpage} OFFSET {$offset}";
+$query = mysqli_query($_con, $sql);
+
+$total_sql="SELECT COUNT(*) FROM `ex_episodes`";
+$total_query=mysqli_query($_con,$total_sql);
+$total_row=mysqli_fetch_array($total_query);
+$epcount = $total_row[0];
 
 //判斷筆數是否可以被整除
 if($epcount%$itemsperpage>0){
@@ -18,8 +30,7 @@ if($epcount%$itemsperpage>0){
     $pages = intval($epcount/$itemsperpage);
 }
 
-echo "共{$epcount}筆資料，每頁顯示{$itemsperpage}筆資料，共{$pages}頁。";
-die();
+echo "<br>共{$epcount}筆資料，每頁顯示{$itemsperpage}筆資料，共{$pages}頁。";
 
 $episodes = array();
 while($row=mysqli_fetch_assoc($query)){ 
@@ -58,6 +69,16 @@ while($row=mysqli_fetch_assoc($query)){
                 </div>
             <?php } ?>
         </div>
+        <hr>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item<?php if($curpage==1){echo " disabled";} ?>"><a class="page-link" href="episodes.php?p=<?php echo $curpage-1; ?>">Previous</a></li>
+                <?php for($i=1;$i<=$pages;$i++){ ?>
+                <li class="page-item<?php if($i==$curpage){echo " active";} ?>"><a class="page-link" href="episodes.php?p=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+                <?php } ?>
+                <li class="page-item<?php if($curpage==$pages){echo " disabled";} ?>"><a class="page-link" href="episodes.php?p=<?php echo $curpage+1; ?>">Next</a></li>
+            </ul>
+        </nav>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
