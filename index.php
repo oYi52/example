@@ -1,5 +1,7 @@
 <?php 
 
+session_start();
+
 $_con = mysqli_connect("localhost","example","kYcM1XuFebgqftpm","example");
 $_con->query("SET NAMES utf8");
 
@@ -45,12 +47,22 @@ while($row=mysqli_fetch_assoc($query)){
     <div class="card mt-3 p-3">
         <div class="row">
             <div class="col-4">
+                <p><?php 
+                    if(isset($_SESSION['user'])){
+                        echo "您好，{$_SESSION['name']}。<a href='logout.php'>請按此登出</a>";
+                    }else{
+                        echo "您尚未登入！<a href='login.php'>請按此登入</a>";
+                    }
+                ?></p>
+                <hr>  
                 <h2>作品列表</h2>
             </div>
             <div class="col-2 offset-6">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
-                新增作品
-            </button>
+                <?php if(isset($_SESSION['user'])&&$_SESSION['role']=="A"){ ?>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                    新增作品
+                </button>
+                <?php } ?>
             </div>
         </div>
         <!--頁籤按鈕組-->

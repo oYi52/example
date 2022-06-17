@@ -8,8 +8,8 @@
 </head>
 <body>
     <form action="auth_process.php" method="post">
-        <input type="text" name="userid" id="userid">
-        <input type="password" name="userpass" id="userpass">
+        <input type="text" name="userid" id="userid" placeholder="請輸入帳號">
+        <input type="password" name="userpass" id="userpass" placeholder="請輸入密碼">
         <input type="submit" name="action" value="登入">
     </form>
 </body>
