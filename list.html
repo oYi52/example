@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>列表</h1>
+    <table id="datalist">
+        <thead>
+            <tr>
+                <th>名稱</th>
+                <th>email</th>
+                <th>地址</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <button onclick="loadData()">載入更多資料</button>
+    
+    <script>
+        let data = [
+  {
+    "id": 1,
+    "name": "John",
+    "age": 30,
+    "cars": [
+      {
+        "id": 1,
+        "name": "Ford"
+      },
+      {
+        "id": 2,
+        "name": "Fiat"
+      },
+      {
+        "id": 3,
+        "name": "Honda"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Mary",
+    "age": 25,
+    "cars": [
+      {
+        "id": 4,
+        "name": "Renault"
+      },
+      {
+        "id": 5,
+        "name": "Volvo"
+      },
+      {
+        "id": 6,
+        "name": "BMW"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Bob",
+    "age": 20,
+    "cars": [
+      {
+        "id": 7,
+        "name": "Mercedes"
+      },
+      {
+        "id": 8,
+        "name": "Audi"
+      },
+      {
+        "id": 9,
+        "name": "Ferrari"
+      }
+    ]
+  }
+];
+        let target = document.querySelector("tbody");
+        fetch("http://127.0.0.1/example/api.php?limit=10").then(
+            data=>{
+                return data.json();
+            }
+        ).then(
+            responde=>{
+                console.log(responde);
+                responde.forEach(
+                    res=>{
+                        //新增一列
+                        let newrow = document.createElement("tr");
+                        //新增名字欄並新增至新的一列
+                        let rowname = document.createElement("td");
+                        rowname.innerText = res.短期補習班名稱;
+                        newrow.appendChild(rowname);
+                        //新增年齡欄並新增至新的一列
+                        let rowemail = document.createElement("td");
+                        rowemail.innerText = res.電子郵件;
+                        newrow.appendChild(rowemail);
+                        //新增年齡欄並新增至新的一列
+                        let rowaddress = document.createElement("td");
+                        rowaddress.innerText = res.地址;
+                        newrow.appendChild(rowaddress);
+                        //把剛剛的東西加進去目標裡面
+                        target.appendChild(newrow);
+                    }
+                );
+            }
+        );
+        
+        function loadData(){
+            //Your code here..
+        }
+
+        
+    </script>
+</body>
+</html>
