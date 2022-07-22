@@ -5,72 +5,157 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
 </head>
 <body>
-    <h1>列表</h1>
-    <table id="datalist">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>名稱</th>
-                <th>email</th>
-                <th>地址</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="container">
+        <h1>列表</h1>
+        <noscript>
+            <div class="alert alert-danger">
+                請開啟JavaScript並重新載入頁面！
+            </div>
+        </noscript>
+        <table id="datalist" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>名稱</th>
+                    <th>email</th>
+                    <th>地址</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+            <tfoot>
+                <tr class="placeholder-glow" style="display: none;">
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                </tr>
+                <tr class="placeholder-glow" style="display: none;">
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                </tr>
+                <tr class="placeholder-glow" style="display: none;">
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                </tr>
+                <tr class="placeholder-glow" style="display: none;">
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                </tr>
+                <tr class="placeholder-glow" style="display: none;">
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                </tr>
+                <tr class="placeholder-glow" style="display: none;">
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                </tr>
+                <tr class="placeholder-glow" style="display: none;">
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                </tr>
+                <tr class="placeholder-glow" style="display: none;">
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                </tr>
+                <tr class="placeholder-glow" style="display: none;">
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                </tr>
+                <tr class="placeholder-glow" style="display: none;">
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                    <td><span class="placeholder col-6"></span></td>
+                </tr>
+            </tfoot>
+        </table>
+        <button id="loadbtn" class="btn btn-primary" onclick="loadData()">載入更多資料</button>
+        <button id="loadingbtn" class="btn btn-primary" type="button" disabled style="display: none;">
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            載入中...
+        </button>
+        <div id="errmsg">
 
-        </tbody>
-    </table>
-    <button id="loadbtn" onclick="loadData()">載入更多資料</button>
-    <div id="errmsg">
-
+        </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
 
         let count = 0;
         loadData();
         
         function loadData(){
-          let btn = document.getElementById("loadbtn");
-          btn.disabled = true;
-          let target = document.querySelector("tbody");
-          fetch("http://127.0.0.1/example/api.php?limit=10&offset="+count).then(
-              data=>{
-                  return data.json();
-              }
-          ).then(
-              responde=>{
-                  console.log(responde);
-                  responde.forEach(
-                      res=>{
-                          //新增一列
-                          let newrow = document.createElement("tr");
-                          //新增序號欄並新增至新的一列
-                          let roworder = document.createElement("td");
-                          roworder.innerText = count+1;
-                          newrow.appendChild(roworder);
-                          //新增名字欄並新增至新的一列
-                          let rowname = document.createElement("td");
-                          rowname.innerText = res.短期補習班名稱;
-                          newrow.appendChild(rowname);
-                          //新增年齡欄並新增至新的一列
-                          let rowemail = document.createElement("td");
-                          rowemail.innerText = res.電子郵件;
-                          newrow.appendChild(rowemail);
-                          //新增年齡欄並新增至新的一列
-                          let rowaddress = document.createElement("td");
-                          rowaddress.innerText = res.地址;
-                          newrow.appendChild(rowaddress);
-                          //把剛剛的東西加進去目標裡面
-                          target.appendChild(newrow);
-                          count+=1;
-                      }
-                  );
-                  btn.disabled = false;
-              }
-          ).catch(e=>{
-            /* Your Code Here... */
-          });
+            $(".placeholder-glow").show();
+            let btn = document.getElementById("loadbtn");
+            btn.disabled = true;
+            $("#loadbtn").hide();
+            $("#loadingbtn").show();
+            let target = document.querySelector("tbody");
+            fetch("http://127.0.0.1/example/api.php?limit=10&offset="+count).then(
+                data=>{
+                    return data.json();
+                }
+            ).then(
+                responde=>{
+                    console.log(responde);
+                    setTimeout(()=>{
+                        $(".placeholder-glow").hide();
+                        responde.forEach(
+                            res=>{
+                                //新增一列
+                                let newrow = document.createElement("tr");
+                                //新增序號欄並新增至新的一列
+                                let roworder = document.createElement("td");
+                                roworder.innerText = count+1;
+                                newrow.appendChild(roworder);
+                                //新增名字欄並新增至新的一列
+                                let rowname = document.createElement("td");
+                                rowname.innerText = res.短期補習班名稱;
+                                newrow.appendChild(rowname);
+                                //新增年齡欄並新增至新的一列
+                                let rowemail = document.createElement("td");
+                                rowemail.innerText = res.電子郵件;
+                                newrow.appendChild(rowemail);
+                                //新增年齡欄並新增至新的一列
+                                let rowaddress = document.createElement("td");
+                                rowaddress.innerText = res.地址;
+                                newrow.appendChild(rowaddress);
+                                //把剛剛的東西加進去目標裡面
+                                target.appendChild(newrow);
+                                count+=1;
+                            }
+                        );
+                        btn.disabled = false;
+                        $("#loadingbtn").hide();
+                        $("#loadbtn").show();
+                    },3000);
+                }
+            ).catch(e=>{
+                /* Your Code Here... */
+            });
         }
 
         

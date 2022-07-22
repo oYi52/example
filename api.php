@@ -1,5 +1,5 @@
 <?php 
-    $data = file_get_contents("https://bsbb.kh.edu.tw/afterschool/opendata/afterschool_json.jsp?city=70");
+    $data = file_get_contents("https://bsb.kh.edu.tw/afterschool/opendata/afterschool_json.jsp?city=70");
 
     if(isset($_GET['limit'])&&isset($_GET['offset'])){
         $limit = $_GET['limit'];
