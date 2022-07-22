@@ -1,11 +1,11 @@
 <?php 
-    $data = file_get_contents("https://bsb.kh.edu.tw/afterschool/opendata/afterschool_json.jsp?city=70");
+    $data = file_get_contents("https://bsbb.kh.edu.tw/afterschool/opendata/afterschool_json.jsp?city=70");
 
-    if(isset($_GET['limit'])){
+    if(isset($_GET['limit'])&&isset($_GET['offset'])){
         $limit = $_GET['limit'];
         $output_array=array();
         $data_array = json_decode($data, true);
-        for($i = 0 ; $i<$limit ; $i++){
+        for($i = $_GET['offset'] ; $i<($limit+$_GET['offset']) ; $i++){
             $output_array[] = $data_array[$i];
         }
         echo json_encode($output_array);
